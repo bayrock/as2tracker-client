@@ -1,12 +1,47 @@
 <!DOCTYPE HTML>
 <html>
-  <head>
-	<meta charset="UTF-8" />
-	<title>AS2Tracker</title>
-	<link rel="stylesheet" type="text/css" href="./static/style.css">
-	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
 
-  </head>
+    <!-- HEAD -->
+
+    <head>
+        <meta charset="UTF-8" />
+        <title>AS2Tracker</title>
+        <link rel="stylesheet" type="text/css" href="./static/style.css">
+        <link rel="stylesheet" type="text/css" href="./static/animate.css"/>
+    </head>
+
+  <!-- SCRIPTS -->
+
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+  <script type="text/javascript" src="./static/js/noty/packaged/jquery.noty.packaged.min.js"></script>
+
+  <script>
+      var tracker = new (require('./tracker.js'))();
+
+      tracker.on('post_sent', function(title, artist, songId) {
+      $("#sentSongs").append(
+          $("<tr/>")
+          .append($("<td/>").text(title + " - " + artist))
+          .append($("<td/>").html($("<a/>").attr("href", "https://as2tracker.com/song/" + songId).text("AS2Tracker"))));
+      });
+
+      tracker.on('error', function(error) {
+          var note = noty({layout: 'topCenter',text: error.message, type: "error",
+              animation: {
+                  open: 'animated flipInX', // animate.css class names
+                  close: 'animated flipOutX' // animate.css class names
+              },
+              timeout: 4000
+          });
+      });
+
+      tracker.findLog(function(error) {
+          if (error) { this.emit('error', error); return; }
+          tracker.init();
+      });
+  </script>
+
+  <!-- BODY -->
 
   <body>
 
