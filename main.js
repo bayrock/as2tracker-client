@@ -2,25 +2,26 @@ const electron = require('electron');
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 
-let mainWindow;
+var mainWindow;
 
 function createWindow() {
-  mainWindow = new BrowserWindow({useContentSize: true, titleBarStyle: "hidden", resizable: false});
-  //mainWindow.setMenu(null);
-  mainWindow.loadURL(`file://${__dirname}/index.html`);
-  mainWindow.on('closed', () => {
-    mainWindow = null;
-  });
+    mainWindow = new BrowserWindow({useContentSize: true, titleBarStyle: "hidden", resizable: false});
+
+    //mainWindow.setMenu(null);
+    mainWindow.loadURL(`file://${__dirname}/index.html`);
+
+    mainWindow.on('closed', function() {
+        mainWindow = null;
+    });
 }
 
 app.on('ready', createWindow);
-app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
+app.on('window-all-closed', function() {
+	app.quit();
 });
-app.on('activate', () => {
-  if (mainWindow === null) {
-    createWindow();
-  }
+
+app.on('activate', function() {
+    if (mainWindow == null) {
+        createWindow();
+    }
 });
