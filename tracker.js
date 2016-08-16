@@ -46,30 +46,10 @@ Tracker.prototype.findLog = function(cb) {
 				key: '\\SOFTWARE\\WOW6432Node\\Valve\\Steam'
 			});
 
-			/*TODO: rewrite this horrid mess*/
-			/*key.get('InstallPath', function(err, item) {
-				steamPath = item.value;
-				libraryFolders = [steamPath];
-				libraryFile = steamPath + '\\steamapps\\libraryfolders.vdf';
-				libraryPattern = /^\s+\"\d+\"\s+\"(.+)\"$/;
-				try {
-					data = fs.readFileSync(libraryFile, 'UTF-8');
-					for (var line in data.replace(/\r/g, '').split('\n')) {
-						match = libraryPattern.exec(line);
-						if (match != null) {
-							libraryFolders.push(match[1]);
-						}
-					}
-				} catch (e) {} // Ignore exception
-
-				for (var dir in libraryFolders) {
-					try {
-						fs.stat(dir + '\\steamapps\\appmanifest_235800.acf', function(err, stats) {
-							cb(dir + '\\steamapps\\common\\Audiosurf 2\\Audiosurf2_Data\\output_log.txt');
-						});
-					} catch (e) {} // Ignore exception
-				}
-			});*/
+			key.get('InstallPath', function(err, item) {
+				var steamPath = item.value;
+                cb(steamPath + '/steamapps/common/Audiosurf 2/Audiosurf2_Data/output_log.txt');
+			});
 			break;
 	}
 }
@@ -88,6 +68,8 @@ Helpers
 
 Tracker.prototype._handleLine = function (line) {
 	var match = /^sending score\. title:(.+) duration:(.+) artist:(.*)$/.exec(line)
+
+    //console.log(line)
 
 	if (match != null) {
 		this._postSong(match[1], match[2], match[3]);
